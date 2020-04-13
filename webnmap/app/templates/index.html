@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>nmap web gui</title>
+</head>
+<body>
+    <form action="." method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" name="host" class="form-control" placeholder="hostname to scan">
+        </div>
+        <div class="form-group">
+            <input type="text" name="arguments" class="form-control" placeholder="nmap arguments">
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Start Scanning" class="btn btn-primary py-3 px-5">
+        </div>
+    </form>
+    <div id="result">
+
+    </div>
+</body>
+</html>
