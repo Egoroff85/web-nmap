@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <form action="." method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" name="host" class="form-control" placeholder="hostname to scan">
+        </div>
+        <div class="form-group">
+            <input type="text" name="arguments" class="form-control" placeholder="nmap arguments">
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Start Scanning" class="btn btn-primary py-3 px-5">
+        </div>
+    </form>
+{% endblock content %}

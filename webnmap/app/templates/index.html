@@ -1,27 +1,36 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>nmap web gui</title>
-</head>
-<body>
-    <form action="." method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input type="text" name="host" class="form-control" placeholder="hostname to scan">
-        </div>
-        <div class="form-group">
-            <input type="text" name="arguments" class="form-control" placeholder="nmap arguments">
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Start Scanning" class="btn btn-primary py-3 px-5">
-        </div>
-    </form>
-    <div id="result">
-
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% if scans %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Начато</th>
+            <th scope="col">Имя хоста или ip-адрес</th>
+            <th scope="col">Аргументы</th>
+            <th scope="col">Статус сканирования</th>
+            <th scope="col">Окончено</th>
+            <th scope="col">Отчет</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for scan in scans %}
+        <tr>
+            <td>{{ scan.started_at|date:"Y-m-d H:i:s" }}</td>
+            <td>{{ scan.hostname }}</td>
+            <td>{{ scan.arguments }}</td>
+            <td>{{ scan.status }}</td>
+            {% if scan.status != 'В процессе' %}
+            <td>{{ scan.finished_at|date:"Y-m-d H:i:s" }}</td>
+            {% else %}
+            <td>-</td>
+            {% endif %}
+            <td><a href="{% url 'report' scan.pk %}">Отчет</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h1>Отсутствуют запущенные сканирования</h1>
+    {% endif %}
+{% endblock content %}

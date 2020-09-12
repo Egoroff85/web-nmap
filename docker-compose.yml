@@ -5,7 +5,7 @@ services:
     build: ./webnmap
     command: gunicorn webnmap.wsgi:application --bind 0.0.0.0:8080
     volumes:
-      - ./webnmap/:/usr/src/app/
+      - ./webnmap:/usr/src/program/
     ports:
       - 8080:8080
     environment:
@@ -19,9 +19,9 @@ services:
 
   celery:
     build: ./webnmap
-    command: celery worker --app=app --loglevel=info --logfile=logs/celery.log
+    command: celery worker --app=webnmap --loglevel=info
     volumes:
-      - ./webnmap/:/usr/src/app/
+      - ./webnmap:/usr/src/program/
     environment:
       - DEBUG=1
       - SECRET_KEY=x*-)o@fr^#cemy#k7fs)bky)v%@xyaokblugytumk=1u9tfkdr
@@ -33,4 +33,20 @@ services:
       - redis
 
   redis:
-    image: redis:alpine
+    image: redis:5-alpine
+
+  dashboard:
+    build: ./webnmap
+    command: flower -A webnmap --port=5555 --broker=redis://redis:6379/0
+    ports:
+      - 5555:5555
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=x*-)o@fr^#cemy#k7fs)bky)v%@xyaokblugytumk=1u9tfkdr
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - web
+      - redis
+      - celery
