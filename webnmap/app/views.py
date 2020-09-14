@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
-from .models import Scan
+from .models import *
 from .tasks import get_scan_result
 
 
@@ -21,10 +21,29 @@ class NewScan(View):
             return render(request, 'newscan.html')
 
     def post(self, request):
-        s = Scan(hostname=request.POST['host'], arguments=request.POST['arguments'])
+        try:
+            status = Status.objects.get(status='В процессе')
+        except Exception:
+            status = Status()
+            status.save()
+
+        try:
+            hostname = Hostname.objects.get(hostname=request.POST['host'])
+        except Exception:
+            hostname = Hostname(hostname=request.POST['host'])
+            hostname.save()
+
+        args = request.POST['arguments'] if request.POST['arguments'] != '' else '-'
+        try:
+            arguments = Arguments.objects.get(arguments=args)
+        except Exception:
+            arguments = Arguments(arguments=args)
+            arguments.save()
+
+        s = Scan(hostname=hostname, arguments=arguments, status=status)
         s.save()
+
         get_scan_result.apply_async(args=[s.pk])
-        # get_scan_result.delay(s.pk)
         return redirect('home')
 
 

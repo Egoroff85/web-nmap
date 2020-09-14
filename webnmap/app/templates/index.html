@@ -1,36 +1,42 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    {% if scans %}
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Начато</th>
-            <th scope="col">Имя хоста или ip-адрес</th>
-            <th scope="col">Аргументы</th>
-            <th scope="col">Статус сканирования</th>
-            <th scope="col">Окончено</th>
-            <th scope="col">Отчет</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for scan in scans %}
-        <tr>
-            <td>{{ scan.started_at|date:"Y-m-d H:i:s" }}</td>
-            <td>{{ scan.hostname }}</td>
-            <td>{{ scan.arguments }}</td>
-            <td>{{ scan.status }}</td>
-            {% if scan.status != 'В процессе' %}
-            <td>{{ scan.finished_at|date:"Y-m-d H:i:s" }}</td>
-            {% else %}
-            <td>-</td>
-            {% endif %}
-            <td><a href="{% url 'report' scan.pk %}">Отчет</a></td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <h1>Отсутствуют запущенные сканирования</h1>
-    {% endif %}
+    <div class="container col-md-12">
+        {% if scans %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Начато</th>
+                <th scope="col">Имя хоста или ip-адрес</th>
+                <th scope="col">Аргументы</th>
+                <th scope="col">Статус сканирования</th>
+                <th scope="col">Окончено</th>
+                <th scope="col">Отчет</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for scan in scans %}
+            <tr>
+                <td>{{ scan.started_at|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ scan.hostname.hostname }}</td>
+                <td>{{ scan.arguments.arguments }}</td>
+                <td>{{ scan.status.status }}</td>
+                {% if scan.is_finished %}
+                <td>{{ scan.finished_at|date:"Y-m-d H:i:s" }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
+                {% if scan.status.status == 'Завершено' %}
+                <td><a href="{% url 'report' scan.pk %}">Отчет</a></td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h1>Отсутствуют запущенные сканирования</h1>
+        {% endif %}
+    </div>
 {% endblock content %}
