@@ -2,5 +2,8 @@ from django import forms
 
 
 class NewScanForm(forms.Form):
-    host = forms.CharField(label='Хост или хосты для сканирования', max_length=100)
-    arguments = form.CharField(label='', max_length=100)
+    hostname = forms.CharField(label='Имя хоста', max_length=100,
+                               widget=forms.TextInput(attrs={"class": "form-control"}))
+    arguments = forms.CharField(label='Аргументы', max_length=100, required=False,
+                               widget=forms.TextInput(attrs={"class": "form-control"}))
+    add_schedule = forms.BooleanField(label='Добавить как расписание?', required=False, initial=False)
