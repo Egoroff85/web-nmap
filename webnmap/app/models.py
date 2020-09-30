@@ -8,7 +8,7 @@ class Scan(models.Model):
     is_finished = models.BooleanField(default=False, verbose_name='Завершено?')
     hostname = models.ForeignKey('Hostname', on_delete=models.PROTECT, verbose_name='Имя хоста')
     arguments = models.ForeignKey('Arguments', on_delete=models.PROTECT, verbose_name='Аргументы')
-    report = models.TextField(blank=True, verbose_name='Отчет')
+    report = models.JSONField(null=True, verbose_name='Отчет')
 
     def __str__(self):
         return f'{self.hostname} {self.arguments}'
@@ -32,7 +32,7 @@ class Hostname(models.Model):
 
 
 class Arguments(models.Model):
-    arguments = models.CharField(max_length=150, default='-', verbose_name='Аргументы', primary_key=True)
+    arguments = models.CharField(max_length=100, default='-', verbose_name='Аргументы', primary_key=True)
 
     def __str__(self):
         return self.arguments

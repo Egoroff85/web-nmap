@@ -1,5 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    {{ scan.report }}
+    <div class="container col-md-6">
+        {% if scan.report %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Протокол</th>
+                <th scope="col">Порт</th>
+                <th scope="col">Название</th>
+                <th scope="col">Состояние порта</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for hostname, ports in scan.report.items %}
+            <tr>
+                <td colspan="4" style="text-align: center"><b>Имя хоста (или IP-адрес): {{ hostname }}</b></td>
+            </tr>
+                {% for port, params in ports.items %}
+                <tr>
+                    <td>{{ params.protocol }}</td>
+                    <td>{{ params.port }}</td>
+                    <td>{{ params.name }}</td>
+                    <td>{{ params.state }}</td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h1>Отчет о сканировании пустой</h1>
+        {% endif %}
+    </div>
 {% endblock content %}

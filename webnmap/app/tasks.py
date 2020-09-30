@@ -5,14 +5,14 @@ import nmap
 from webnmap.celery import app
 from .models import *
 
+from .parsers import NmapCSVReportParser
 
 @app.task
 def get_scan_result(scan_id):
     s = Scan.objects.get(pk=scan_id)
     try:
-        arguments = s.arguments.arguments if s.arguments.arguments != '-' else ''
         nm = nmap.PortScanner()
-        nm.scan(hosts=s.hostname.hostname, arguments=arguments)
+        nm.scan(hosts=s.hostname.hostname, arguments=s.arguments.arguments)
         result = nm.csv()
     except Exception:
         try:
@@ -32,5 +32,7 @@ def get_scan_result(scan_id):
         status.save()
     s.status = status
     s.is_finished = True
-    s.report = result
+    p = NmapCSVReportParser(result)
+    report = p.convert_report_to_json()
+    s.report = report
     s.save()

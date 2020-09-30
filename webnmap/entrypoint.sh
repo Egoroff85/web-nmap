@@ -1,9 +1,8 @@
 #!/bin/sh
 
-# python manage.py flush --no-input
+mkdir static
 python manage.py makemigrations
 python manage.py migrate
-# python manage.py syncdb
-# python manage.py collectstatic --no-input --clear
+python manage.py collectstatic --no-input --clear
 
 exec "$@"
