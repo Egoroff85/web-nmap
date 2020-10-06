@@ -5,6 +5,8 @@ from .forms import NewScanForm
 from .models import *
 from .tasks import get_scan_result
 
+from celery.task.control import revoke
+
 
 class IndexView(View):
     def get(self, request):
@@ -40,3 +42,14 @@ class Report(View):
     def get(self, request, id):
         scan = Scan.objects.get(pk=id)
         return render(request, 'report.html', {'scan': scan})
+
+
+class DeleteReport(View):
+    def get(self, request, id):
+        scan = Scan.objects.get(pk=id)
+        if scan.status == 'В процессе':
+            revoke(task_id=scan.celery_task_id, terminate=True)
+        scan.delete()
+
+        scans = Scan.objects.all()
+        return render(request, 'index.html', {'scans': scans})

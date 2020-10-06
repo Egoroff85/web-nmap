@@ -11,6 +11,7 @@
                 <th scope="col">Аргументы</th>
                 <th scope="col">Статус сканирования</th>
                 <th scope="col">Окончено</th>
+                <th scope="col">Удалить</th>
                 <th scope="col">Отчет</th>
             </tr>
             </thead>
@@ -26,6 +27,7 @@
                 {% else %}
                 <td>-</td>
                 {% endif %}
+                <td><a href="{% url 'delete_report' scan.pk %}">Удалить</a></td>
                 {% if scan.status == 'Завершено' %}
                 <td><a href="{% url 'report' scan.pk %}">Отчет</a></td>
                 {% else %}
