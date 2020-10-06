@@ -1,45 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-{#    <form action="." method="post">#}
-{#        {% csrf_token %}#}
-{#        <div class="form-group">#}
-{#            <input type="text" name="host" class="form-control" placeholder="hostname to scan">#}
-{#        </div>#}
-{#        <div class="form-group">#}
-{#            <input type="text" name="arguments" class="form-control" placeholder="nmap arguments">#}
-{#        </div>#}
-{#        <div class="form-group">#}
-{#            <input type="submit" value="Start Scanning" class="btn btn-primary py-3 px-5">#}
-{#        </div>#}
-{#    </form>#}
-    <div class="container">
+    <div class="container col-md-6">
     <form action="{% url 'new_scan' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-
-{#        {{ form.non_field.errors }}#}
-{#        <div class="form-group">#}
-{#            <label for="{{ form.hostname.id_for_label }}">Имя хоста: </label>#}
-{#            {{ form.hostname }}#}
-{#            <div class="invalid-feedback">#}
-{#                {{ form.hostname.errors }}#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="form-group">#}
-{#            <label for="{{ form.arguments.id_for_label }}">Аргументы: </label>#}
-{#            {{ form.arguments }}#}
-{#            <div class="invalid-feedback">#}
-{#                {{ form.arguments.errors }}#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="form-group">#}
-{#            <label for="{{ form.add_schedule.id_for_label }}">Добавить как расписание? </label>#}
-{#            {{ form.add_schedule }}#}
-{#            <div class="invalid-feedback">#}
-{#                {{ form.add_schedule.errors }}#}
-{#            </div>#}
-{#        </div>#}
         <input type="submit" value="Добавить" class="btn btn-primary py-3 px-5">
     </form>
     </div>

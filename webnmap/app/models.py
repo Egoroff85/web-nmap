@@ -44,7 +44,7 @@ class Hostname(models.Model):
 
 
 class Arguments(models.Model):
-    arguments = models.CharField(max_length=100, default='-', verbose_name='Аргументы', primary_key=True)
+    arguments = models.CharField(max_length=100, verbose_name='Аргументы', primary_key=True)
 
     def __str__(self):
         return self.arguments
