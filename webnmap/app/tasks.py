@@ -2,12 +2,13 @@ import datetime
 
 import nmap
 
-from webnmap.celery import app
+from webnmap.celery import celery_app
 from .models import *
 
-from .parsers import NmapCSVReportParser
+from .services import NmapCSVReportParser
 
-@app.task
+
+@celery_app.task
 def get_scan_result(scan_id):
     s = Scan.objects.get(pk=scan_id)
     try:
@@ -15,24 +16,23 @@ def get_scan_result(scan_id):
         nm.scan(hosts=s.hostname.hostname, arguments=s.arguments.arguments)
         result = nm.csv()
     except Exception:
-        try:
-            status = Status.objects.get(status='Ошибка')
-        except Exception:
-            status = Status(status='Ошибка')
-            status.save()
-        s.status = status
+        s.status = 'Ошибка'
         s.finished_at = datetime.datetime.now()
         s.is_finished = True
         s.save()
         return
-    try:
-        status = Status.objects.get(status='Завершено')
-    except Exception:
-        status = Status(status='Завершено')
-        status.save()
-    s.status = status
+
+    s.status = 'Завершено'
     s.is_finished = True
     p = NmapCSVReportParser(result)
     report = p.convert_report_to_json()
     s.report = report
     s.save()
+
+
+@celery_app.task
+def schedule_scan(interval):
+    scan_schedules = Schedule.objects.filter(interval=interval, is_active=True)
+    for scan_schedule in scan_schedules:
+        s = Scan.objects.create(hostname=scan_schedule.hostname, arguments=scan_schedule.arguments)
+        get_scan_result.apply_async(args=[s.pk])

@@ -32,6 +32,21 @@ services:
       - web
       - redis
 
+  celery_beat:
+    build: ./webnmap
+    command: celery beat --app=webnmap --loglevel=info
+    volumes:
+      - ./webnmap:/usr/src/program/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=x*-)o@fr^#cemy#k7fs)bky)v%@xyaokblugytumk=1u9tfkdr
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - web
+      - redis
+
   redis:
     image: redis:5-alpine
 

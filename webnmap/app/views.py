@@ -25,29 +25,12 @@ class NewScan(View):
     def post(self, request):
         form = NewScanForm(request.POST)
         if form.is_valid():
-            try:
-                status = Status.objects.get(status='В процессе')
-            except Exception:
-                status = Status()
-                status.save()
-
-            try:
-                hostname = Hostname.objects.get(hostname=form.cleaned_data['hostname'])
-            except Exception:
-                hostname = Hostname(hostname=form.cleaned_data['hostname'])
-                hostname.save()
-
-            args = form.cleaned_data['arguments'].strip() if form.cleaned_data['arguments'].strip() != '' else '-'
-            try:
-                arguments = Arguments.objects.get(arguments=args)
-            except Exception:
-                arguments = Arguments(arguments=args)
-                arguments.save()
-
-            s = Scan(hostname=hostname, arguments=arguments, status=status)
+            hostname, _ = Hostname.objects.get_or_create(hostname=form.cleaned_data['hostname'].strip())
+            arguments, _ = Arguments.objects.get_or_create(arguments=form.cleaned_data['arguments'])
+            s = Scan.objects.create(hostname=hostname, arguments=arguments)
+            uuid = get_scan_result.apply_async(args=[s.pk])
+            s.celery_task_id = uuid
             s.save()
-
-            get_scan_result.apply_async(args=[s.pk])
             return redirect('home')
         else:
             return render(request, 'newscan.html', {'form': form})

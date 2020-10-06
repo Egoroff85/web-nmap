@@ -17,12 +17,12 @@
             <tr>
                 <td colspan="4" style="text-align: center"><b>Имя хоста (или IP-адрес): {{ hostname }}</b></td>
             </tr>
-                {% for port, params in ports.items %}
+                {% for port in ports %}
                 <tr>
-                    <td>{{ params.protocol }}</td>
-                    <td>{{ params.port }}</td>
-                    <td>{{ params.name }}</td>
-                    <td>{{ params.state }}</td>
+                    <td>{{ port.protocol }}</td>
+                    <td>{{ port.port }}</td>
+                    <td>{{ port.name }}</td>
+                    <td>{{ port.state }}</td>
                 </tr>
                 {% endfor %}
             {% endfor %}

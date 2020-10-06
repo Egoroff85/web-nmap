@@ -21,16 +21,10 @@ class ArgumentsAdmin(admin.ModelAdmin):
     search_fields = ('arguments',)
 
 
-class StatusAdmin(admin.ModelAdmin):
-    list_display = ('status',)
-    list_display_links = ('status',)
-    search_fields = ('status',)
-
-
 class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'start_date', 'interval', 'is_active', 'hostname', 'arguments')
-    list_display_links = ('id', 'start_date', 'interval', 'hostname', 'arguments')
-    search_fields = ('start_date', 'interval', 'hostname', 'arguments')
+    list_display = ('id', 'interval', 'is_active', 'hostname', 'arguments')
+    list_display_links = ('id', 'interval', 'hostname', 'arguments')
+    search_fields = ('interval', 'hostname', 'arguments')
     list_editable = ('is_active',)
     list_filter = ('is_active',)
 
@@ -38,5 +32,4 @@ class ScheduleAdmin(admin.ModelAdmin):
 admin.site.register(Scan, ScanAdmin)
 admin.site.register(Hostname, HostnameAdmin)
 admin.site.register(Arguments, ArgumentsAdmin)
-admin.site.register(Status, StatusAdmin)
 admin.site.register(Schedule, ScheduleAdmin)

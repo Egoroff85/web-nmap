@@ -15,29 +15,17 @@ class NmapCSVReportParser():
             ip, hostname, hostname_type, protocol, port, name, state, *_ = line
             if hostname != '':
                 if hostname != current_hostname:
-                    result[hostname] = {}
+                    result[hostname] = []
                     current_hostname = hostname
             else:
                 if ip != current_hostname:
-                    result[ip] = {}
+                    result[ip] = []
                     current_hostname = ip
 
-            key = f'{protocol}_{port}'
-            result[current_hostname][key] = {
+            result[current_hostname].append({
                 'protocol': protocol,
                 'port': port,
                 'name': name,
                 'state': state
-            }
+            })
         return result
-
-# {
-#     'hostname or ip': {
-#         'protocol_port': {
-#             'protocol': 'protocol',
-#             'port': 'port',
-#             'name': 'name',
-#             'state': 'state'
-#         }
-#     }
-# }

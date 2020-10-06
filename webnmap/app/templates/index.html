@@ -20,13 +20,13 @@
                 <td>{{ scan.started_at|date:"Y-m-d H:i:s" }}</td>
                 <td>{{ scan.hostname.hostname }}</td>
                 <td>{{ scan.arguments.arguments }}</td>
-                <td>{{ scan.status.status }}</td>
+                <td>{{ scan.status }}</td>
                 {% if scan.is_finished %}
                 <td>{{ scan.finished_at|date:"Y-m-d H:i:s" }}</td>
                 {% else %}
                 <td>-</td>
                 {% endif %}
-                {% if scan.status.status == 'Завершено' %}
+                {% if scan.status == 'Завершено' %}
                 <td><a href="{% url 'report' scan.pk %}">Отчет</a></td>
                 {% else %}
                 <td>-</td>
