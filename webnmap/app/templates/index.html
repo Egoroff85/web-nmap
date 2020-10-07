@@ -27,9 +27,9 @@
                 {% else %}
                 <td>-</td>
                 {% endif %}
-                <td><a href="{% url 'delete_report' scan.pk %}">Удалить</a></td>
+                <td><a class="btn btn-danger" href="{% url 'delete_report' scan.pk %}">Удалить</a></td>
                 {% if scan.status == 'Завершено' %}
-                <td><a href="{% url 'report' scan.pk %}">Отчет</a></td>
+                <td><a class="btn btn-primary" href="{% url 'report' scan.pk %}">Отчет</a></td>
                 {% else %}
                 <td>-</td>
                 {% endif %}
@@ -38,7 +38,7 @@
             </tbody>
         </table>
         {% else %}
-        <h1 class="text-center">Отсутствуют запущенные сканирования</h1>
+        <h2 class="text-center">Отсутствуют отчеты о сканировании</h2>
         {% endif %}
     </div>
 {% endblock content %}

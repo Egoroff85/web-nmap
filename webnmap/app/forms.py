@@ -3,8 +3,8 @@ from django import forms
 
 class NewScanForm(forms.Form):
     SCHEDULE = [
-        (False, 'Сразу'),
-        (True, 'Как расписание')
+        (0, 'Сразу'),
+        (1, 'Как расписание')
     ]
 
     ARGUMENT = [
@@ -28,7 +28,7 @@ class NewScanForm(forms.Form):
                                widget=forms.TextInput(attrs={"class": "form-control"}))
     arguments = forms.CharField(label='Аргументы', max_length=100, widget=forms.RadioSelect(choices=ARGUMENT),
                                 initial='-sS')
-    add_schedule = forms.BooleanField(label='Стартовать сразу или добавить как расписание?',
-                                      widget=forms.RadioSelect(choices=SCHEDULE), initial=False)
+    add_schedule = forms.IntegerField(label='Стартовать сразу или добавить как расписание?',
+                                      widget=forms.RadioSelect(choices=SCHEDULE), initial=0)
     interval = forms.IntegerField(label='Интервал расписания в часах', required=False,
                                   widget=forms.RadioSelect(choices=INTERVALS), initial=1)

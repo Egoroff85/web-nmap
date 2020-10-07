@@ -26,13 +26,13 @@
                     checked
                     {% endif %}>
                 </td>
-                <td><a href="{% url 'delete_schedule' schedule.pk %}">Удалить</a></td>
+                <td><a class="btn btn-danger" href="{% url 'delete_schedule' schedule.pk %}">Удалить</a></td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <h1 class="text-center">Отсутствуют расписания</h1>
+        <h2 class="text-center">Отсутствуют расписания</h2>
         {% endif %}
     </div>
 {% endblock content %}

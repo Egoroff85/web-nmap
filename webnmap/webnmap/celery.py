@@ -16,18 +16,18 @@ def setup_periodic_tasks(sender, **kwargs):
     from app.tasks import schedule_scan
 
     sender.add_periodic_task(
-        crontab(hour='*/1'),
+        crontab(minute=0, hour='*/1'),
         schedule_scan.s(1),
     )
     sender.add_periodic_task(
-        crontab(hour='*/2'),
+        crontab(minute=0, hour='*/2'),
         schedule_scan.s(2),
     )
     sender.add_periodic_task(
-        crontab(hour='*/4'),
+        crontab(minute=0, hour='*/4'),
         schedule_scan.s(4),
     )
     sender.add_periodic_task(
-        crontab(hour='*/8'),
+        crontab(minute=0, hour='*/8'),
         schedule_scan.s(8),
     )

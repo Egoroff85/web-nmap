@@ -1,5 +1,6 @@
 import json
 
+from celery.task.control import revoke
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View
@@ -7,8 +8,7 @@ from django.views.generic import View
 from .forms import NewScanForm
 from .models import *
 from .tasks import get_scan_result
-
-from celery.task.control import revoke
+from .services import PDFReportExporter, HTMLReportExporter, JSONReportExporter
 
 
 class IndexView(View):
@@ -16,9 +16,6 @@ class IndexView(View):
         if not request.is_ajax():
             scans = Scan.objects.all()
             return render(request, 'index.html', {'scans': scans})
-
-        # books = list(Book.objects.values())
-        # return HttpResponse(json.dumps(books), content_type='application/json')
 
 
 class NewScan(View):
@@ -33,7 +30,7 @@ class NewScan(View):
             hostname, _ = Hostname.objects.get_or_create(hostname=form.cleaned_data['hostname'].strip())
             arguments, _ = Arguments.objects.get_or_create(arguments=form.cleaned_data['arguments'])
 
-            if form.cleaned_data['add_schedule']:
+            if form.cleaned_data['add_schedule'] == 1:
                 Schedule.objects.create(
                     hostname=hostname,
                     arguments=arguments,
@@ -42,7 +39,7 @@ class NewScan(View):
                 )
                 return redirect('home')
 
-            s = Scan.objects.create()
+            s = Scan.objects.create(hostname=hostname, arguments=arguments)
             uuid = get_scan_result.apply_async(args=[s.pk])
             s.celery_task_id = uuid
             s.save()
@@ -94,3 +91,24 @@ class ToggleSchedule(View):
             except Exception:
                 resp = {'status': 'error'}
             return HttpResponse(json.dumps(resp), content_type='application/json')
+
+
+class ExportJSON(View):
+    def get(self, request, id):
+        scan = Scan.objects.get(pk=id)
+        exporter = JSONReportExporter(None, scan)
+        return exporter.export()
+
+
+class ExportHTML(View):
+    def get(self, request, id):
+        scan = Scan.objects.get(pk=id)
+        exporter = HTMLReportExporter('export/html.html', scan)
+        return exporter.export()
+
+
+class ExportPDF(View):
+    def get(self, request, id):
+        scan = Scan.objects.get(pk=id)
+        exporter = PDFReportExporter('export/pdf.html', scan)
+        return exporter.export()

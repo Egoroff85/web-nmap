@@ -5,7 +5,7 @@
     <form action="{% url 'new_scan' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Добавить" class="btn btn-primary py-3 px-5">
+        <input type="submit" value="Добавить" class="btn btn-primary py-3 px-5" id="new-scan-submit">
     </form>
     </div>
 {% endblock content %}
