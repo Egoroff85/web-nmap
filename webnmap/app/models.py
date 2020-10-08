@@ -10,17 +10,17 @@ class Scan(models.Model):
 
     started_at = models.DateTimeField(auto_now_add=True, verbose_name='Начато')
     finished_at = models.DateTimeField(auto_now=True, verbose_name='Окончено')
-    status = models.ForeignKey('Status', on_delete=models.PROTECT, verbose_name='Статус')
     is_finished = models.BooleanField(default=False, verbose_name='Завершено?')
+    status = models.CharField(
+        max_length=100,
+        choices=STATUSES,
+        default='В процессе',
+        verbose_name='Статус'
+    )
     hostname = models.ForeignKey('Hostname', on_delete=models.PROTECT, verbose_name='Имя хоста')
     arguments = models.ForeignKey('Arguments', on_delete=models.PROTECT, verbose_name='Аргументы')
     report = models.JSONField(null=True, verbose_name='Отчет')
     celery_task_id = models.CharField(max_length=100, null=True, verbose_name='Идентификатор задачи Celery')
-    status = models.CharField(
-        max_length=100,
-        choices=STATUSES,
-        default='В процессе'
-    )
 
     def __str__(self):
         return f'{self.hostname} {self.arguments}'
