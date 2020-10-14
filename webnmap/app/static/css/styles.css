@@ -1,0 +1,25 @@
+.errorlist {
+    color: red;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+#id_add_schedule {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#id_arguments {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#id_interval {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}

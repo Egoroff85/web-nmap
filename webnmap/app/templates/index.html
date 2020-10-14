@@ -1,27 +1,44 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>nmap web gui</title>
-</head>
-<body>
-    <form action="." method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input type="text" name="host" class="form-control" placeholder="hostname to scan">
-        </div>
-        <div class="form-group">
-            <input type="text" name="arguments" class="form-control" placeholder="nmap arguments">
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Start Scanning" class="btn btn-primary py-3 px-5">
-        </div>
-    </form>
-    <div id="result">
-
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container col-md-12">
+        {% if scans %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Начато</th>
+                <th scope="col">Имя хоста или ip-адрес</th>
+                <th scope="col">Аргументы</th>
+                <th scope="col">Статус сканирования</th>
+                <th scope="col">Окончено</th>
+                <th scope="col">Удалить</th>
+                <th scope="col">Отчет</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for scan in scans %}
+            <tr>
+                <td>{{ scan.started_at|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ scan.hostname.hostname }}</td>
+                <td>{{ scan.arguments.arguments }}</td>
+                <td>{{ scan.status }}</td>
+                {% if scan.is_finished %}
+                <td>{{ scan.finished_at|date:"Y-m-d H:i:s" }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
+                <td><a class="btn btn-danger" href="{% url 'delete_report' scan.pk %}">Удалить</a></td>
+                {% if scan.status == 'Завершено' %}
+                <td><a class="btn btn-primary" href="{% url 'report' scan.pk %}">Отчет</a></td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h2 class="text-center">Отсутствуют отчеты о сканировании</h2>
+        {% endif %}
     </div>
-</body>
-</html>
+{% endblock content %}

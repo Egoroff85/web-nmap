@@ -1,0 +1,12 @@
+asgiref==3.2.10
+celery==4.4.7
+Django==3.1
+gunicorn==20.0.4
+pytest==5.4.3
+pytest-django
+python-nmap==0.6.1
+pytz==2019.3
+redis==3.5.3
+sqlparse==0.3.1
+flower
+xhtml2pdf==0.2.4
